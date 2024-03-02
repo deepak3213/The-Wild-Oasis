@@ -6,6 +6,9 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCabin } from "../../services/apiCabins";
+import toast from "react-hot-toast";
 
 const FormRow = styled.div`
   display: grid;
@@ -44,25 +47,52 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
-  const { register, handleSubmit } = useForm();
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: createCabin,
+    onSuccess: () => {
+      toast.success("Cabin Created Successfully.");
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"],
+      });
+      reset();
+    },
+  });
+  console.log(isLoading);
+  const { register, handleSubmit, reset } = useForm();
   function onSubmit(data) {
-    console.log(data);
+    mutate(data);
   }
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" {...register("name")} />
+        <Input
+          type="text"
+          id="name"
+          disabled={isLoading}
+          {...register("name")}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+        <Input
+          type="number"
+          id="maxCapacity"
+          disabled={isLoading}
+          {...register("maxCapacity")}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" {...register("regularPrice")} />
+        <Input
+          type="number"
+          id="regularPrice"
+          disabled={isLoading}
+          {...register("regularPrice")}
+        />
       </FormRow>
 
       <FormRow>
@@ -70,6 +100,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="discount"
+          disabled={isLoading}
           defaultValue={0}
           {...register("discount")}
         />
@@ -80,6 +111,7 @@ function CreateCabinForm() {
         <Textarea
           type="number"
           id="description"
+          disabled={isLoading}
           defaultValue=""
           {...register("description")}
         />
