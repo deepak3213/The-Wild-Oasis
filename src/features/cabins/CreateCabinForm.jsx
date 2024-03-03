@@ -58,10 +58,11 @@ function CreateCabinForm() {
       reset();
     },
   });
-  console.log(isLoading);
+
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   function onSubmit(data) {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
+    // console.log({ ...data, image: data.image[0].name });
   }
 
   const { errors } = formState;
@@ -149,7 +150,15 @@ function CreateCabinForm() {
 
       <FormRow>
         <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          type="file"
+          {...register("image", {
+            required: "This field is required.",
+          })}
+        />
+        {errors?.image?.message && <Error>{errors.description.message}</Error>}
       </FormRow>
 
       <FormRow>
