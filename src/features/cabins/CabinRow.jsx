@@ -3,6 +3,8 @@ import { formatCurrency } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import CreateCabinForm from "./CreateCabinForm";
 
 const TableRow = styled.div`
   display: grid;
@@ -43,6 +45,7 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
+  const [showForm, setShowForm] = useState(false);
   const {
     id: cabinId,
     name,
@@ -81,10 +84,11 @@ function CabinRow({ cabin }) {
           <span>&mdash;</span>
         )}
         <div>
-          <button>Edit</button>
+          <button onClick={() => setShowForm(!showForm)}>Edit</button>
           <button onClick={() => mutate(cabinId)}>Delete</button>
         </div>
       </TableRow>
+      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }
