@@ -45,11 +45,11 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({ cabinToEdit = {}, removeForm }) {
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId); // check whether this form is used for edit cabin or creating a new cabin.
   const { createCabin, isCreating } = useCreateCabin();
-  const { editCabin, isEditing } = useEditCabin(removeForm);
+  const { editCabin, isEditing } = useEditCabin();
   // this is for edition mutation
 
   const isWorking = isEditing || isCreating;
@@ -67,6 +67,7 @@ function CreateCabinForm({ cabinToEdit = {}, removeForm }) {
         {
           onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
@@ -171,7 +172,11 @@ function CreateCabinForm({ cabinToEdit = {}, removeForm }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={() => onCloseModal?.()}
+        >
           Cancel
         </Button>
         <Button>{isEditSession ? "Edit Cabin" : "Create Cabin"}</Button>
