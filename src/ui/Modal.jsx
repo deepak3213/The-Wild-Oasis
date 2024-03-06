@@ -14,7 +14,6 @@ import { useOutsideClick } from "../hooks/useOutsideClick";
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
-  width: 80%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--color-grey-0);
